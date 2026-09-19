@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 280" width="100%" height="280">
+  <defs>
+    <style>
+      @keyframes pulseRing {
+        0%, 100% { transform: scale(1); opacity: 0.85; }
+        50% { transform: scale(1.04); opacity: 1; }
+      }
+      @keyframes slowRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes beamScan {
+        0% { transform: translateY(-40px); opacity: 0; }
+        50% { opacity: 0.6; }
+        100% { transform: translateY(140px); opacity: 0; }
+      }
+      @keyframes blinkCursor {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      .aperture-group {
+        transform-origin: 120px 140px;
+        animation: slowRotate 24s linear infinite;
+      }
+      .pulse-ring {
+        transform-origin: 120px 140px;
+        animation: pulseRing 3.5s ease-in-out infinite;
+      }
+      .scan-line {
+        animation: beamScan 4s ease-in-out infinite;
+      }
+      .cursor {
+        animation: blinkCursor 1s step-end infinite;
+      }
+      .title-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 800;
+        font-size: 38px;
+        letter-spacing: -0.03em;
+        fill: #f4f3ee;
+      }
+      .subtitle-text {
+        font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        fill: #a1a1aa;
+      }
+      .meta-tag {
+        font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+        font-size: 11px;
+        font-weight: 500;
+        fill: #71717a;
+      }
+      .pill-bg {
+        fill: #121214;
+        stroke: #27272a;
+        stroke-width: 1;
+      }
+      .pill-text {
+        font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+        font-size: 10.5px;
+        font-weight: 500;
+        fill: #f4f3ee;
+      }
+    </style>
+
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#121214" />
+    </linearGradient>
+
+    <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4f3ee" stop-opacity="0" />
+      <stop offset="50%" stop-color="#f4f3ee" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#f4f3ee" stop-opacity="0" />
+    </linearGradient>
+
+    <pattern id="dotGrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#27272a" fill-opacity="0.6" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="880" height="280" rx="14" fill="url(#bgGrad)" stroke="#27272a" stroke-width="1.5" />
+  <rect width="880" height="280" rx="14" fill="url(#dotGrid)" />
+
+  <!-- Left: Precision Animated Viewfinder Reticle -->
+  <g>
+    <!-- Outer static frame box -->
+    <rect x="56" y="76" width="128" height="128" rx="8" fill="#121214" stroke="#27272a" stroke-width="1" />
+    
+    <!-- Rotating crosshairs & aperture -->
+    <g class="aperture-group">
+      <!-- Crosshair ticks -->
+      <line x1="120" y1="84" x2="120" y2="100" stroke="#71717a" stroke-width="1.5" />
+      <line x1="120" y1="180" x2="120" y2="196" stroke="#71717a" stroke-width="1.5" />
+      <line x1="64" y1="140" x2="80" y2="140" stroke="#71717a" stroke-width="1.5" />
+      <line x1="160" y1="140" x2="176" y2="140" stroke="#71717a" stroke-width="1.5" />
+      <!-- Segmented circle -->
+      <circle cx="120" cy="140" r="42" fill="none" stroke="#3f3f46" stroke-width="1" stroke-dasharray="4 6" />
+    </g>
+
+    <!-- Pulsing Center Lens -->
+    <g class="pulse-ring">
+      <circle cx="120" cy="140" r="32" fill="none" stroke="#f4f3ee" stroke-width="2" />
+      <circle cx="120" cy="140" r="12" fill="#f4f3ee" />
+    </g>
+
+    <!-- Subtle scanline beam inside aperture box -->
+    <g clip-path="url(#apertureClip)">
+      <rect x="56" y="100" width="128" height="20" fill="url(#beamGrad)" class="scan-line" />
+    </g>
+  </g>
+
+  <!-- Right: Typography & Brand -->
+  <g transform="translate(220, 0)">
+    <!-- Top System Breadcrumb -->
+    <text x="0" y="75" class="meta-tag">SYSTEM / MANIFEST-V3 / ACTIVE-INSPECTOR</text>
+
+    <!-- Main Title -->
+    <text x="0" y="122" class="title-text">OMNILENS</text>
+
+    <!-- Tagline -->
+    <text x="0" y="152" class="subtitle-text">PRECISION WEB INTELLIGENCE &amp; IN-PAGE AUDITING SUITE</text>
+
+    <!-- Interactive Terminal Line -->
+    <text x="0" y="186" font-family="ui-monospace, monospace" font-size="12" fill="#71717a">
+      <tspan fill="#4ade80">&gt;</tspan> inspecting dom structure, wcag 2.1 contrast &amp; live palettes<tspan class="cursor" fill="#f4f3ee">_</tspan>
+    </text>
+
+    <!-- Feature Pills -->
+    <g transform="translate(0, 212)">
+      <!-- Pill 1 -->
+      <rect x="0" y="0" width="112" height="26" rx="4" class="pill-bg" />
+      <text x="56" y="17" text-anchor="middle" class="pill-text">WCAG 2.1 AA</text>
+
+      <!-- Pill 2 -->
+      <rect x="122" y="0" width="124" height="26" rx="4" class="pill-bg" />
+      <text x="184" y="17" text-anchor="middle" class="pill-text">LIVE CONTRAST</text>
+
+      <!-- Pill 3 -->
+      <rect x="256" y="0" width="128" height="26" rx="4" class="pill-bg" />
+      <text x="320" y="17" text-anchor="middle" class="pill-text">ASSET SCALER</text>
+
+      <!-- Pill 4 -->
+      <rect x="394" y="0" width="122" height="26" rx="4" class="pill-bg" />
+      <text x="455" y="17" text-anchor="middle" class="pill-text">SANDBOX JS</text>
+
+      <!-- Pill 5 -->
+      <rect x="526" y="0" width="102" height="26" rx="4" class="pill-bg" />
+      <text x="577" y="17" text-anchor="middle" class="pill-text">ZERO-BUILD</text>
+    </g>
+  </g>
+</svg>

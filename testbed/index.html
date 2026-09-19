@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniLens Testbed & Verification Suite</title>
+  <meta name="description" content="Precision verification environment for OmniLens browser extension and core analysis engines.">
+  <meta property="og:title" content="OmniLens Testbed">
+  <meta property="og:description" content="A rich interactive showcase designed to test DOM extraction, color palettes, a11y audits, and reader mode.">
+  <meta property="og:type" content="website">
+
+  <style>
+    :root {
+      --bg: #f7f6f0;            /* Soft creamy paper */
+      --surface: #ffffff;
+      --border: #e4e2d8;
+      --text-ink: #121214;       /* Deep charcoal ink */
+      --text-muted: #71717a;
+      --accent-charcoal: #18181b;
+      --accent-bone: #ede8df;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text-ink);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    header {
+      background: var(--text-ink);
+      color: #f4f3ee;
+      padding: 2.5rem 1.5rem;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-desc {
+      color: #a1a1aa;
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+      max-width: 600px;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 0.75rem;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #27272a;
+      color: #f4f3ee;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid #3f3f46;
+    }
+
+    .btn-preview-panel {
+      background: #f4f3ee;
+      color: #09090b;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.15s;
+    }
+
+    .btn-preview-panel:hover {
+      opacity: 0.9;
+    }
+
+    /* Sections */
+    main {
+      margin-top: 2rem;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      color: var(--text-ink);
+    }
+
+    .sec-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Color Swatches */
+    .swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .swatch {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .contrast-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    .passing-contrast {
+      color: #121214;
+      font-weight: 600;
+    }
+
+    .failing-contrast {
+      color: #a1a1aa; /* 2.4:1 contrast on white - fails AA */
+      font-size: 0.85rem;
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 0.75rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+      color: var(--text-ink);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--text-ink);
+    }
+
+    .btn-submit {
+      background: var(--text-ink);
+      color: #f4f3ee;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Article Reader */
+    article.reader-sample {
+      line-height: 1.75;
+      font-size: 0.95rem;
+      color: #27272a;
+    }
+
+    article.reader-sample h3 {
+      font-size: 1.1rem;
+      margin: 1.25rem 0 0.5rem 0;
+      color: #09090b;
+    }
+
+    article.reader-sample p {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Deep tree */
+    .nest-box {
+      border-left: 2px solid #a1a1aa;
+      padding-left: 10px;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="header-flex">
+        <div>
+          <h1 class="header-title">OmniLens Testbed</h1>
+          <p class="header-desc">Precision test environment with DOM topologies, WCAG test cases, and media assets.</p>
+          <div class="tag-row">
+            <span class="tag">Manifest V3</span>
+            <span class="tag">ES Modules</span>
+            <span class="tag">Monochrome & Cream</span>
+          </div>
+        </div>
+        <div>
+          <a href="../src/sidepanel/sidepanel.html" target="_blank" class="btn-preview-panel">
+            Open Side Panel Preview &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Section 1: Color Palette & Contrast Test -->
+    <section id="colors-section">
+      <h2>1. Dynamic Color Palette & Contrast Validation</h2>
+      <p class="sec-desc">Test computed style extraction, luminance calculation, and WCAG AA/AAA evaluations.</p>
+      
+      <div class="swatches">
+        <div class="swatch" style="background-color: #09090b;" title="Obsidian #09090b"></div>
+        <div class="swatch" style="background-color: #18181b;" title="Zinc 900 #18181b"></div>
+        <div class="swatch" style="background-color: #f4f3ee;" title="Soft Cream #f4f3ee"></div>
+        <div class="swatch" style="background-color: #ede8df;" title="Warm Bone #ede8df"></div>
+        <div class="swatch" style="background-color: #71717a;" title="Muted Slate #71717a"></div>
+        <div class="swatch" style="background-color: #4ade80;" title="Sage Green #4ade80"></div>
+        <div class="swatch" style="background-color: #fbbf24;" title="Warm Amber #fbbf24"></div>
+        <div class="swatch" style="background-color: #fb7185;" title="Brick Rose #fb7185"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="contrast-box" style="background: #ffffff;">
+          <label>High Contrast (Passing AAA)</label>
+          <p class="passing-contrast">Deep charcoal text (#121214) on white background yields an exceptional 17.5:1 ratio.</p>
+        </div>
+        <div class="contrast-box" style="background: #ffffff;">
+          <label>Low Contrast (Intentional A11y Finding)</label>
+          <p class="failing-contrast">Muted grey text (#a1a1aa) on white background yields ~2.4:1 ratio and should be flagged by OmniLens.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Heading Hierarchy -->
+    <section id="headings-section">
+      <h2>2. Document Heading Hierarchy</h2>
+      <p class="sec-desc">Notice that h2 jumps directly to h4 below to verify skipped heading level detection.</p>
+      <h4>4. Skipped Heading Level Subtitle (Intentional warning)</h4>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        The outline generator in OmniLens should flag that an &lt;h3&gt; was skipped between &lt;h2&gt; and &lt;h4&gt;.
+      </p>
+    </section>
+
+    <!-- Section 3: Forms & Accessibility -->
+    <section id="forms-section">
+      <h2>3. Interactive Elements & Forms</h2>
+      <p class="sec-desc">Accessible vs. unassociated form elements.</p>
+      
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:0.95rem; margin-bottom:0.5rem;">Properly Accessible Form</h3>
+          <div class="form-group">
+            <label for="input-email">Email Address</label>
+            <input type="email" id="input-email" placeholder="developer@example.com">
+          </div>
+          <button type="button" class="btn-submit" aria-label="Submit Form">Submit Form</button>
+        </div>
+
+        <div>
+          <h3 style="font-size:0.95rem; margin-bottom:0.5rem;">Unlabeled Controls (A11y Test)</h3>
+          <div class="form-group">
+            <input type="text" placeholder="I have no associated label element">
+          </div>
+          <button type="button" class="btn-submit" style="width: 32px; height: 32px;" title="Empty button without text or aria"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Assets & Media -->
+    <section id="assets-section">
+      <h2>4. Assets & Media Harvester</h2>
+      <p class="sec-desc">Harvests SVGs, images, external links, and stylesheets.</p>
+
+      <div class="swatches" style="align-items: center;">
+        <!-- Embedded SVG 1 -->
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#121214" stroke-width="2">
+          <title>Viewfinder Aperture</title>
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+
+        <!-- Embedded SVG 2 -->
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2">
+          <title>Terminal Code</title>
+          <polyline points="4 17 10 11 4 5"></polyline>
+          <line x1="12" y1="19" x2="20" y2="19"></line>
+        </svg>
+
+        <!-- Image with alt -->
+        <img src="../icons/icon-48.png" alt="OmniLens App Icon" width="48" height="48" style="border-radius: 6px;">
+
+        <!-- Image without alt (Intentional a11y issue) -->
+        <img src="../icons/icon-16.png" width="16" height="16">
+      </div>
+
+      <div style="margin-top: 10px; font-size: 0.85rem;">
+        <a href="https://developer.chrome.com/docs/extensions/mv3/" target="_blank" rel="noopener" style="color: #121214; font-weight: 500;">
+          Chrome Extensions MV3 Docs &nearr;
+        </a>
+      </div>
+    </section>
+
+    <!-- Section 5: Long-Form Reader Article -->
+    <section id="article-section">
+      <h2>5. Reader Mode Sample Article</h2>
+      <p class="sec-desc">Test article density heuristic and reading metrics.</p>
+
+      <article class="reader-sample">
+        <h3>High-Performance Web Inspection Architecture</h3>
+        <p>
+          Browser extensions are uniquely powerful software systems. Operating directly at the intersection of web pages and the browser rendering engine, they enable developers to audit accessibility, inspect design systems, and run diagnostics without leaving their active workflow.
+        </p>
+        <p>
+          In modern web architectures, real-time DOM traversal must be executed carefully to prevent layout thrashing. By coordinating computed style lookups through requestAnimationFrame and yielding to the browser scheduler, an extension can extract typography, inspect color palettes, and audit accessibility at 60 frames per second.
+        </p>
+        <p>
+          With Manifest V3, extensions utilize persistent storage, background service workers, and isolated execution sandboxes to guarantee user privacy and rock-solid stability across every tab.
+        </p>
+      </article>
+    </section>
+
+    <!-- Section 6: Deep DOM Nesting -->
+    <section id="depth-section">
+      <h2>6. Deep DOM Nesting Structure</h2>
+      <div class="nest-box">
+        Level 1
+        <div class="nest-box">
+          Level 2
+          <div class="nest-box">
+            Level 3
+            <div class="nest-box">
+              Level 4
+              <div class="nest-box">
+                Level 5: Deepest child node
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 2rem 0;">
+    OmniLens Verification Playground &bull; Manifest V3 Ready
+  </footer>
+
+</body>
+</html>

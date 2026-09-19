@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "OmniLens - Web Intelligence & Dev PowerTool",
+  "version": "1.0.0",
+  "description": "Deep DOM & accessibility audit, color palette extractor, asset harvester, reader mode, and sandboxed JS console.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "OmniLens Quick View"
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel/sidepanel.html"
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "contextMenus",
+    "sidePanel",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content-script.js"],
+      "css": ["src/content/content-style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "sandbox": {
+    "pages": ["src/sandbox/sandbox.html"]
+  },
+  "commands": {
+    "open_omnilens": {
+      "suggested_key": {
+        "default": "Alt+Shift+L",
+        "mac": "Alt+Shift+L"
+      },
+      "description": "Open OmniLens Side Panel"
+    }
+  }
+}

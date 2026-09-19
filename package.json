@@ -1,0 +1,23 @@
+{
+  "name": "omnilens-extension",
+  "version": "1.0.0",
+  "description": "OmniLens - Web Intelligence & Developer Power Tool (Manifest V3)",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/test-runner.js",
+    "generate-icons": "python3 scripts/generate-icons.py"
+  },
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "developer-tools",
+    "accessibility",
+    "wcag",
+    "color-palette",
+    "dom-inspector",
+    "side-panel"
+  ],
+  "author": "Antigravity Pair Programmer",
+  "license": "MIT"
+}

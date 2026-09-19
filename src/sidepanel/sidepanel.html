@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniLens Side Panel</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body class="theme-dark">
+  <header class="app-header">
+    <div class="logo-area">
+      <img src="../../icons/icon-48.png" alt="OmniLens" class="logo-icon">
+      <div class="logo-meta">
+        <h1 class="logo-title">OmniLens</h1>
+        <span class="logo-tag">Web Intelligence</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btn-inspect-mode" class="icon-btn" title="Toggle Element Picker">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+      </button>
+      <button id="btn-refresh" class="icon-btn" title="Refresh Page Analysis">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Active Page Snapshot Bar -->
+  <div class="page-bar">
+    <div class="page-status-dot"></div>
+    <div class="page-info">
+      <span id="page-title" class="page-title-text" title="Active Page">Detecting page...</span>
+      <span id="page-url" class="page-url-text">about:blank</span>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="tab-btn active" data-tab="tab-audit" role="tab" aria-selected="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Audit
+    </button>
+    <button class="tab-btn" data-tab="tab-palette" role="tab" aria-selected="false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/></svg>
+      Palette
+    </button>
+    <button class="tab-btn" data-tab="tab-harvester" role="tab" aria-selected="false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Assets
+    </button>
+    <button class="tab-btn" data-tab="tab-reader" role="tab" aria-selected="false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Reader
+    </button>
+    <button class="tab-btn" data-tab="tab-scratchpad" role="tab" aria-selected="false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Console
+    </button>
+  </nav>
+
+  <!-- Main Content Areas -->
+  <main class="content-container">
+    
+    <!-- 1. Audit Tab -->
+    <section id="tab-audit" class="tab-pane active" role="tabpanel">
+      <!-- Metric Cards Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card score-card">
+          <div class="score-ring" id="a11y-score-ring">
+            <span id="a11y-score-val">--</span>
+          </div>
+          <span class="metric-label">A11y Health</span>
+        </div>
+        <div class="metric-card">
+          <span id="metric-nodes" class="metric-num">--</span>
+          <span class="metric-label">DOM Nodes</span>
+        </div>
+        <div class="metric-card">
+          <span id="metric-depth" class="metric-num">--</span>
+          <span class="metric-label">Tree Depth</span>
+        </div>
+        <div class="metric-card">
+          <span id="metric-headings" class="metric-num">--</span>
+          <span class="metric-label">Headings</span>
+        </div>
+      </div>
+
+      <!-- Detected Tech Stack -->
+      <div class="section-block">
+        <h3 class="section-title">Detected Technologies</h3>
+        <div id="tech-stack-container" class="chip-container">
+          <span class="chip-empty">Analyzing stack...</span>
+        </div>
+      </div>
+
+      <!-- A11y & SEO Issues -->
+      <div class="section-block">
+        <div class="section-header-flex">
+          <h3 class="section-title">Audit Findings</h3>
+          <span id="issue-count-badge" class="badge">0 Issues</span>
+        </div>
+        <div id="issues-list" class="issues-list">
+          <div class="empty-state">No issues detected yet.</div>
+        </div>
+      </div>
+
+      <!-- Headings Outline -->
+      <div class="section-block">
+        <h3 class="section-title">Document Heading Structure</h3>
+        <div id="headings-outline" class="outline-tree">
+          <div class="empty-state">No headings found.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Palette & Typography Tab -->
+    <section id="tab-palette" class="tab-pane" role="tabpanel">
+      <div class="section-header-flex">
+        <h3 class="section-title">Color Palette</h3>
+        <button id="btn-copy-css-vars" class="btn-sm">Copy CSS Vars</button>
+      </div>
+      <div id="palette-grid" class="swatch-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Color Detail & Contrast Inspector -->
+      <div class="section-block color-inspector-box">
+        <h3 class="section-title">Contrast Inspector</h3>
+        <div class="contrast-row">
+          <div class="contrast-swatch-pair">
+            <div id="contrast-preview-fg" class="color-chip" title="Foreground"></div>
+            <div id="contrast-preview-bg" class="color-chip" title="Background"></div>
+          </div>
+          <div class="contrast-stats">
+            <div class="contrast-ratio-text"><span id="contrast-val">--</span>:1</div>
+            <div id="contrast-level-badge" class="badge">Checking</div>
+          </div>
+        </div>
+        <p class="contrast-hint">Select swatches above or inspect elements to check WCAG compliance.</p>
+      </div>
+
+      <!-- Typography -->
+      <div class="section-block">
+        <h3 class="section-title">Typography & Fonts</h3>
+        <div id="fonts-list" class="fonts-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Asset Harvester Tab -->
+    <section id="tab-harvester" class="tab-pane" role="tabpanel">
+      <div class="filter-toolbar">
+        <div class="filter-chips">
+          <button class="filter-chip active" data-filter="all">All</button>
+          <button class="filter-chip" data-filter="image">Images</button>
+          <button class="filter-chip" data-filter="svg">SVGs</button>
+          <button class="filter-chip" data-filter="link">Links</button>
+        </div>
+        <input type="text" id="asset-search" class="search-input" placeholder="Filter assets...">
+      </div>
+
+      <div id="assets-grid" class="assets-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- 4. Reader Mode Tab -->
+    <section id="tab-reader" class="tab-pane" role="tabpanel">
+      <div class="reader-meta-bar">
+        <div class="reader-stat">
+          <span class="stat-label">Reading Time</span>
+          <span id="read-time" class="stat-val">-- min</span>
+        </div>
+        <div class="reader-stat">
+          <span class="stat-label">Words</span>
+          <span id="read-words" class="stat-val">--</span>
+        </div>
+        <div class="reader-stat">
+          <span class="stat-label">Readability</span>
+          <span id="read-level" class="stat-val">--</span>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <h4 class="sub-title">Key Topics</h4>
+        <div id="reader-keywords" class="chip-container"></div>
+      </div>
+
+      <div class="reader-view-box">
+        <div class="reader-header-actions">
+          <button id="btn-copy-reader" class="btn-sm">Copy Clean Text</button>
+        </div>
+        <article id="reader-article-content" class="reader-article">
+          <p class="empty-state">Extracting primary article content...</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. Scratchpad & Console Tab -->
+    <section id="tab-scratchpad" class="tab-pane" role="tabpanel">
+      <div class="scratchpad-toolbar">
+        <select id="snippet-select" class="select-dropdown">
+          <option value="">Load Snippet...</option>
+        </select>
+        <button id="btn-save-snippet" class="btn-sm">Save</button>
+      </div>
+
+      <div class="editor-container">
+        <textarea id="code-editor" class="code-editor" spellcheck="false" placeholder="// Write JavaScript to execute in isolated sandbox or query page DOM...&#10;console.log('Hello OmniLens');&#10;return { title: document.title, timestamp: Date.now() };"></textarea>
+      </div>
+
+      <div class="runner-actions">
+        <button id="btn-run-sandbox" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Run in Sandbox
+        </button>
+        <button id="btn-query-page" class="btn-secondary">Query Page DOM</button>
+        <button id="btn-clear-console" class="btn-ghost">Clear</button>
+      </div>
+
+      <div class="terminal-wrapper">
+        <div class="terminal-header">
+          <span>Execution Output</span>
+          <span id="exec-time" class="exec-time"></span>
+        </div>
+        <pre id="console-output" class="terminal-body"><span class="term-dim">// Output will appear here...</span></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Hidden Sandboxed Frame for Safe Code Execution -->
+  <iframe id="sandbox-frame" src="../sandbox/sandbox.html" style="display:none;"></iframe>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Action copied!</div>
+
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
