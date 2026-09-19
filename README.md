@@ -64,7 +64,7 @@ OmniLens requires **no compilation, no node_modules, and no build step**. It run
 
 ### 1. Download or Clone
 ```bash
-git clone https://github.com/vescofr-oxy/omnilens.git
+git clone https://github.com/vallkyrionfr/omnilens.git
 ```
 *(or download and extract the repository ZIP file).*
 
